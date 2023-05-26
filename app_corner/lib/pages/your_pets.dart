@@ -106,7 +106,7 @@ class YourPets extends GetView<PetsController> {
                         ),
                         radius: 30.0,
                       ),
-                      contentPadding: EdgeInsets.all(15.0),
+                      contentPadding: const EdgeInsets.all(15.0),
                       tileColor: Colors.grey[350],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)

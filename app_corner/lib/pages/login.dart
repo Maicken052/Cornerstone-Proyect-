@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:app_corner/Components/my_text_field.dart'; 
-import 'package:app_corner/Components/my_button.dart'; 
-import 'package:app_corner/Components/shared_preferences.dart' as shared_preferences; 
 import 'package:get/get.dart';
-import 'package:app_corner/routes/app_pages.dart';
-import 'package:http/http.dart' as http;
-import '../components/request_util.dart';
 import 'dart:developer';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:app_corner/Components/my_text_field.dart'; 
+import 'package:app_corner/Components/my_button.dart'; 
+import 'package:app_corner/components/request_util.dart';
+import 'package:app_corner/Components/cupertino_dialog.dart'; 
+import 'package:app_corner/routes/app_pages.dart';
+import 'package:app_corner/Components/user_controller.dart';
+import 'package:http/http.dart' as http;
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Login extends GetView<UserController>{
+  Login({Key? key}) : super(key: key);
 
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  //Obtener la info de las casillas de ussuario y contraseña
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  //Controlar la info de las casillas de usuario y contraseña
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final requestUtil = RequestUtil();
 
   @override
@@ -97,6 +92,8 @@ class _LoginState extends State<Login> {
                 MyButton(
                   onTap: () async{
                     try{
+
+                      //Animación de carga
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -108,69 +105,42 @@ class _LoginState extends State<Login> {
                         },
                       );
 
+                      //Intenta buscar el email y contraseña en la base de datos
                       http.Response response = await requestUtil.login(emailController.text, passwordController.text);
 
+                      //Si se encuentran registrados 
                       if(response.statusCode == 200){
-                        http.Response name = await requestUtil.getName(emailController.text);
+                        http.Response name = await requestUtil.getName(emailController.text);  //Obtiene el username 
                         var dict = json.decode(name.body);
                         String username = dict['user'];
-                        shared_preferences.saveUserData(username, emailController.text, passwordController.text);
-                        Get.offAllNamed(AppPages.HOME);
+                        controller.setUser(username, emailController.text, passwordController.text);  //Guarda la info de la persona en el celular
+                        Get.offAndToNamed(AppPages.HOME);  //Cambia a la pagina de inicio
+
+                      //Mostrar errores
                       }else{
-                        Navigator.pop(context);
+                        if(context.mounted){
+                          Navigator.pop(context);
+                        }
                         var dict = json.decode(response.body);
-                        if(response.statusCode == 422){
+
+                        if(response.statusCode == 422){  //Error por campos de texto vacios
                           var error = dict['detail'].elementAt(0)['msg'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (BuildContext context) => CupertinoAlertDialog(
-                              title: const Text(
-                                'Error',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                              content: Text(
-                                error,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: Text('OK'),
-                                  textStyle: TextStyle(
-                                    color: Colors.black
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                )
-                              ]
-                            )
-                          );
-                        }else{
+                          if(context.mounted){
+                            cupertinoDialog(context, error);
+                          }
+                        }else{  //Error por email o contraseña incorrectas
                           var error = dict['detail'];
-                          showCupertinoDialog(
-                            context: context,
-                            builder: (BuildContext context) => CupertinoAlertDialog(
-                              title: const Text(
-                                'Error',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                              content: Text(
-                                error,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: Text('OK'),
-                                  textStyle: TextStyle(
-                                    color: Colors.black
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                )
-                              ]
-                            )
-                          );
+                          if(context.mounted){
+                            cupertinoDialog(context, error);
+                          }
                         }
                       }
+                    //Errores inesperados
                     }catch(e){
-                      Get.offAllNamed(AppPages.LOGIN);
+                      if(context.mounted){
+                          Navigator.pop(context);
+                        }
+                      cupertinoDialog(context, 'Unexpected crash, please check your internet connection or open the app again');
                     }
                   },
                   containerColor: Colors.black,

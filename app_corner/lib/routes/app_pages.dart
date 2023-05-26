@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:app_corner/bindings/pets_binding.dart';  
+import 'package:app_corner/bindings/user_binding.dart';  
 import 'package:app_corner/pages/login.dart';
 import 'package:app_corner/pages/sign_up.dart';
 import 'package:app_corner/pages/home.dart';
@@ -24,17 +25,20 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.LOGIN,
-      page: () => const Login(),
+      page: () => Login(),
+      binding: UserBinding()
     ),
 
     GetPage(
       name: _Paths.SIGNUP,
-      page: () => const SignUp(),
+      page: () => SignUp(),
+      binding: UserBinding()
     ),
 
     GetPage(
       name: _Paths.HOME,
       page: () => const Home(),
+      binding: UserBinding()
     ),
 
     GetPage(

@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:app_corner/Components/my_text_field.dart'; 
-import 'package:app_corner/Components/my_button.dart'; 
 import 'package:get/get.dart';
-import 'package:app_corner/routes/app_pages.dart';
-import 'package:http/http.dart' as http;
-import 'package:app_corner/Components/shared_preferences.dart' as shared_preferences; 
-import '../components/request_util.dart';
 import 'dart:developer';
 import 'dart:convert';
+import 'package:app_corner/Components/my_text_field.dart'; 
+import 'package:app_corner/Components/my_button.dart'; 
+import 'package:app_corner/components/request_util.dart';
+import 'package:app_corner/Components/cupertino_dialog.dart'; 
+import 'package:app_corner/Components/user_controller.dart';
+import 'package:app_corner/routes/app_pages.dart';
+import 'package:http/http.dart' as http;
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUp extends GetView<UserController>{
+  SignUp({Key? key}) : super(key: key);
 
-  @override
-  State<SignUp> createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUp> {
-
-  //Obtener la info de las casillas de usuario y contraseña
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmpasswordController = TextEditingController();
+  //Controlar la info de las casillas de usuario y contraseña
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController = TextEditingController();
   final requestUtil = RequestUtil();
   
   @override
@@ -98,6 +93,8 @@ class _SignUpState extends State<SignUp> {
                 //Botón de registrarse
                 MyButton(
                   onTap: () async{
+
+                    //Animación de carga
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -109,16 +106,45 @@ class _SignUpState extends State<SignUp> {
                       },
                     );
 
+                    //Si las contraseñas de ambos campos de texto fueron ingresadas correctamente
                     if(passwordController.text == confirmpasswordController.text){
-                      http.Response response = await requestUtil.register(usernameController.text, emailController.text, passwordController.text);
-                      if(response.statusCode == 200){
-                        shared_preferences.saveUserData(usernameController.text, emailController.text, passwordController.text);
-                        Get.offAllNamed(AppPages.HOME);
+                      //Si el usuario no es vacio
+                      if(usernameController.text != ""){
+                        http.Response response = await requestUtil.register(usernameController.text, emailController.text, passwordController.text);  //Intenta registrar al usuario en la base de datos
+                        if(response.statusCode == 200){
+                          controller.setUser(usernameController.text, emailController.text, passwordController.text);  //Guarda la info de la persona en el celular
+                          Get.offAndToNamed(AppPages.HOME);  //Cambia a la pagina de inicio
+
+                        //Mostrar errores
+                        }else{
+                          if(context.mounted){
+                            Navigator.pop(context);
+                          }
+                          var dict = json.decode(response.body);
+
+                          if(response.statusCode == 422){
+                            var error = dict['detail'].elementAt(0)['msg'];
+                            if(context.mounted){
+                              cupertinoDialog(context, error);
+                            }
+                          }else{
+                            var error = dict['detail'];
+                            if(context.mounted){
+                              cupertinoDialog(context, error);
+                            }
+                          }
+                        }
                       }else{
-                        log(response.statusCode.toString());
+                        if(context.mounted){
+                          Navigator.pop(context);
+                        }
+                        cupertinoDialog(context, 'Please enter a username');
                       }
                     }else{
-                      log('passwords doesnt match');
+                      if(context.mounted){
+                        Navigator.pop(context);
+                      }
+                      cupertinoDialog(context, 'The passwords entered do not match');
                     }
                   },
                   containerColor: Colors.black,

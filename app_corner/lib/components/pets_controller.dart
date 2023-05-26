@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_corner/Models/cat_model.dart'; 
 
@@ -32,7 +32,7 @@ class PetsController extends GetxController {
   }
 
   addCat(String name, String age, String weight, String mealsPerDay){
-    cat = new Cat(name: name, age: age, weight: weight, mealsPerDay: mealsPerDay);
+    cat = Cat(name: name, age: age, weight: weight, mealsPerDay: mealsPerDay);
     cats.value.add(cat);
     itemCount.value = cats.value.length;
     nameTextEditingController.clear();
