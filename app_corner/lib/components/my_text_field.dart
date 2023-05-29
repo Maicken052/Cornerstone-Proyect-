@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, sized_box_for_whitespace, todo, prefer_const_literals_to_create_immutables, unused_import, file_names
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget { 
@@ -16,18 +15,18 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context){ 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal:40.0),
+      padding: const EdgeInsets.symmetric(horizontal:40.0),
       child: TextField(
         controller: controller,
         obscureText: hide,
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromARGB(255, 100, 100, 100))
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue)
           ),
-          fillColor:Color.fromARGB(255, 228, 225, 225),
+          fillColor:const Color.fromARGB(255, 228, 225, 225),
           filled: true,
           hintText: hintText,
           hintStyle: TextStyle(
@@ -36,7 +35,7 @@ class MyTextField extends StatelessWidget {
             color: Colors.grey[600],
           )
         )
-      ),
+      )
     );
   }
 }

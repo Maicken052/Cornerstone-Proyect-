@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:developer';
-import 'dart:convert';
-import 'package:app_corner/Components/my_text_field.dart'; 
-import 'package:app_corner/Components/my_button.dart'; 
-import 'package:app_corner/components/request_util.dart';
-import 'package:app_corner/Components/cupertino_dialog.dart'; 
-import 'package:app_corner/routes/app_pages.dart';
-import 'package:app_corner/Components/user_controller.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:developer';
+import '../components/my_text_field.dart'; 
+import '../components/my_button.dart'; 
+import '../components/request_util.dart';
+import '../components/cupertino_dialog.dart'; 
+import '../components/user_controller.dart';
+import '../routes/app_pages.dart';
 
-class Login extends GetView<UserController>{
+class Login extends StatelessWidget{
   Login({Key? key}) : super(key: key);
+
+  //Usar el controlador de usuario
+  final userController = Get.find<UserController>(); 
 
   //Controlar la info de las casillas de usuario y contraseña
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  //Obejeto para peticiones http
   final requestUtil = RequestUtil();
 
   @override
@@ -81,9 +86,9 @@ class Login extends GetView<UserController>{
                         fontFamily: 'JosefinSans',
                         color: Colors.black,
                         )
-                      ),
-                    ],
-                  ),
+                      )
+                    ]
+                  )
                 ),
           
                 const SizedBox(height: 20),
@@ -100,9 +105,9 @@ class Login extends GetView<UserController>{
                           return const Center(
                             child: CircularProgressIndicator(
                               color: Colors.black
-                            ),
+                            )
                           );
-                        },
+                        }
                       );
 
                       //Intenta buscar el email y contraseña en la base de datos
@@ -113,8 +118,8 @@ class Login extends GetView<UserController>{
                         http.Response name = await requestUtil.getName(emailController.text);  //Obtiene el username 
                         var dict = json.decode(name.body);
                         String username = dict['user'];
-                        controller.setUser(username, emailController.text, passwordController.text);  //Guarda la info de la persona en el celular
-                        Get.offAndToNamed(AppPages.HOME);  //Cambia a la pagina de inicio
+                        userController.setUser(username, emailController.text, passwordController.text);  //Guarda la info de la persona 
+                        Get.offAndToNamed(AppPages.HOME);  
 
                       //Mostrar errores
                       }else{
@@ -126,21 +131,22 @@ class Login extends GetView<UserController>{
                         if(response.statusCode == 422){  //Error por campos de texto vacios
                           var error = dict['detail'].elementAt(0)['msg'];
                           if(context.mounted){
-                            cupertinoDialog(context, error);
+                            cupertinoDialog(context, error, 'Error', () => Navigator.pop(context));
                           }
                         }else{  //Error por email o contraseña incorrectas
                           var error = dict['detail'];
                           if(context.mounted){
-                            cupertinoDialog(context, error);
+                            cupertinoDialog(context, error, 'Error', () => Navigator.pop(context));
                           }
                         }
                       }
+                      
                     //Errores inesperados
                     }catch(e){
                       if(context.mounted){
                           Navigator.pop(context);
                         }
-                      cupertinoDialog(context, 'Unexpected crash, please check your internet connection or open the app again');
+                      cupertinoDialog(context, 'Unexpected crash, please check your internet connection or open the app again', 'Error', () => Navigator.pop(context));
                     }
                   },
                   containerColor: Colors.black,
@@ -159,7 +165,7 @@ class Login extends GetView<UserController>{
                         child: Divider(
                           thickness: 1,
                           color: Colors.grey,
-                        ),
+                        )
                       ),
                 
                       Padding(
@@ -171,35 +177,33 @@ class Login extends GetView<UserController>{
                           fontFamily: 'JosefinSans',
                           color: Colors.black,
                           )
-                        ),
+                        )
                       ),
                 
                       Expanded(
                         child: Divider(
                           thickness: 1,
                           color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                        )
+                      )
+                    ]
+                  )
                 ),
           
                 const SizedBox(height: 20),
           
                 //Botón para registrarse
                 MyButton(
-                  onTap: () {
-                    Get.offAllNamed(AppPages.SIGNUP);
-                  },
+                  onTap: () => Get.offAllNamed(AppPages.SIGNUP),
                   containerColor: Colors.white,
                   textColor: Colors.black,
                   text: 'Sign Up',
                 )
-              ],
-            ),
-          ),
-        ),
-      ),
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }

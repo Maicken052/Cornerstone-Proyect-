@@ -1,24 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-dynamic cupertinoDialog(BuildContext context, String msg){
+dynamic cupertinoDialog(BuildContext context, String msg, String title, Function()? function){
   return showCupertinoDialog(
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
-      title: const Text(
-        'Error',
-        style: TextStyle(fontSize: 22),
+
+      //Título del diálogo
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 22)
       ),
+
+      //Contenido del diálogo
       content: Text(
         msg,
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16)
       ),
+
+      //Botón de acción
       actions: [
         CupertinoDialogAction(
           textStyle: const TextStyle(
           ),
-          onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+          onPressed: function,
+          child: const Text('OK')
         )
       ]
     )

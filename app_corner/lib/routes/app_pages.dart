@@ -1,14 +1,12 @@
 import 'package:get/get.dart';
-import 'package:app_corner/bindings/pets_binding.dart';  
-import 'package:app_corner/bindings/user_binding.dart';  
-import 'package:app_corner/pages/login.dart';
-import 'package:app_corner/pages/sign_up.dart';
-import 'package:app_corner/pages/home.dart';
-import 'package:app_corner/pages/add_pet.dart';
-import 'package:app_corner/pages/profile.dart';
-import 'package:app_corner/pages/your_pets.dart';
-import 'package:app_corner/pages/pet.dart';
-
+import '../bindings/pets_binding.dart';   
+import '../pages/login.dart';
+import '../pages/sign_up.dart';
+import '../pages/home.dart';
+import '../pages/add_pet.dart';
+import '../pages/profile.dart';
+import '../pages/your_pets.dart';
+import '../pages/pet.dart';
 part 'app_routes.dart';
 
 class AppPages {
@@ -26,30 +24,27 @@ class AppPages {
     GetPage(
       name: _Paths.LOGIN,
       page: () => Login(),
-      binding: UserBinding()
     ),
 
     GetPage(
       name: _Paths.SIGNUP,
       page: () => SignUp(),
-      binding: UserBinding()
     ),
 
     GetPage(
       name: _Paths.HOME,
-      page: () => const Home(),
-      binding: UserBinding()
+      page: () => Home(),
     ),
 
     GetPage(
       name: _Paths.YOUR_PETS,
-      page: () => const YourPets(),
+      page: () => YourPets(),
       binding: PetsBinding()
     ),
 
     GetPage(
       name: _Paths.ADD_PET,
-      page: () => const AddPet(),
+      page: () => AddPet(),
       binding: PetsBinding()
     ),
 

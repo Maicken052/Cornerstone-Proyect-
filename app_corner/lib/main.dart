@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_corner/routes/app_pages.dart';
+import 'package:app_corner/components/user_controller.dart';
 
 //Función que ejecuta la aplicación
-void main() => runApp(App());
+void main(){
+  runApp(const App());
+  Get.put(UserController());  //Inicializa el controlador de usuario
+} 
 
 class App extends StatelessWidget { 
 const App({ Key? key }) : super(key: key);
@@ -11,7 +15,7 @@ const App({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){ 
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,  //Quitar el banner de debug
       title: 'PetFeed',
       initialRoute: AppPages.LOGIN,
       getPages: AppPages.routes,
