@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_corner/components/my_button.dart'; 
 import 'package:app_corner/models/cat_model.dart'; 
+import '../routes/app_pages.dart';
 
 class Pet extends StatefulWidget {
   const Pet({super.key});
@@ -261,11 +262,11 @@ class _PetState extends State<Pet> {
             //Botón para girar el plato
             MyButton(
               onTap: (){
-
+                
               },
               containerColor: Colors.white,
               textColor: Colors.black,
-              text: 'Spin'
+              text: 'Connect'
             )
           ]
         )

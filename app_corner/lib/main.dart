@@ -28,5 +28,3 @@ const App({ Key? key }) : super(key: key);
     );
   }
 }
-
-
