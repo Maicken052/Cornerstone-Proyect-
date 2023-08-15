@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:developer';
-import '../components/pets_controller.dart';
-import '../components/user_controller.dart';
-import '../components/cupertino_dialog.dart'; 
+import '../controllers/pets_controller.dart';
+import '../controllers/user_controller.dart';
+import '../models/cat_model.dart';
 import '../routes/app_pages.dart';
 
-class YourPets extends GetView<PetsController> {
+class YourPets extends GetView<PetsController>{
   YourPets({Key? key}) : super(key: key);
 
-  // Usar el controlador de usuario
-  final userController = Get.find<UserController>();
+  //Buscar el controlador de usuario para usar el email de la persona
+  final String userEmail = Get.find<UserController>().email.value; 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         leading: BackButton(
           onPressed: () => Get.toNamed(AppPages.HOME),
@@ -23,7 +22,7 @@ class YourPets extends GetView<PetsController> {
         ),
         title: Align(
           alignment: Alignment.centerRight,
-          child: Stack(
+          child: Stack( //se usa stack para poder poner el texto con borde usando dos textos y sobreponiendolos
             children: [
               Text(  
                 "PetFeed", 
@@ -48,64 +47,79 @@ class YourPets extends GetView<PetsController> {
                   color: Colors.grey[100],
                 )
               ),
-
             ]
           )
         )
       ),
 
-      //FutureBuilder para obtener las mascotas del usuario
       body: FutureBuilder(
-        future: controller.addCats(userController.getUser()['email']!),
-        builder: ((context, snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting){  //Si la conexión está esperando
+        future: controller.addCats(userEmail),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting){ 
             return const Center(
               child: CircularProgressIndicator(
                 color: Colors.black
               ),
             );
-          }else if (snapshot.hasError){  //Si la conexión tiene un error
-            return cupertinoDialog(context, snapshot.error.toString(), 'Error', () => Get.toNamed(AppPages.HOME));
-          }else if (snapshot.hasData){  //Si la conexión obtuvo las mascotas
+          }else if (snapshot.hasError){  
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+                style: const TextStyle(
+                  fontSize: 30.0,
+                  fontFamily: 'JosefinSans',
+                  color: Colors.black
+                )
+              ),
+            );
+          }else if (snapshot.hasData){ 
             return Column(
               children: [
+                //Caja con texto de "Your pets:"
                 Row(
                   children: [
-
-                    //Caja con texto de "Your pets:"
                     Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: const Text(
-                          "Your pets:",
-                          style: TextStyle(
-                            fontSize: 40.0,
-                            fontFamily: 'JosefinSans',
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.0,
-                            color: Colors.black
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: const Text(
+                            "Your pets:",
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              fontFamily: 'JosefinSans',
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black
+                            )
                           )
-                        )
+                        ),
                       )
-                    )
+                    ),
                   ]
                 ),
-          
+                    
                 const SizedBox(height: 10.0),
-
-                //Lista de mascotas
+            
+                //Si no se han agregado mascotas, se muestra un respectivo mensaje, de lo contrario se muestran las mascotas
+                controller.cats.value.isEmpty ?
+                  const Text(
+                    "no pets added yet",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'JosefinSans',
+                      color: Colors.black
+                    )
+                  ) :
                 Expanded(
                   child: Obx(() => ListView.builder(
-                    itemCount: controller.itemCount.value,  //Cantidad de mascotas
-                    itemBuilder: ((context, index) {  //Iterar sobre las mascotas para crear sus respectivas cajas
-                      final cat = controller.cats.value[index];
+                    itemCount: controller.cats.value.length,  
+                    itemBuilder: (BuildContext context, int index){  
+                      final Cat cat = controller.cats.value[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Container(
-                          margin: const EdgeInsets.only(bottom: 10.0),  //Separación entre cajas
+                          margin: const EdgeInsets.only(bottom: 15.0),
                           child: ListTile(
-                            
-                            //Titulo de la caja
                             title: Text(
                               cat.name,
                               style: TextStyle(
@@ -116,39 +130,58 @@ class YourPets extends GetView<PetsController> {
                               color: Colors.grey[800]
                               )
                             ),
-
-                            //Imagen de la mascota
-                            leading: const CircleAvatar(  
-                              backgroundImage: AssetImage(
-                              "images/profile.jpg",  //TODO: Hacer que esto se pueda cambiar a gusto
+            
+                            leading: cat.imageLink != 'no image' ? 
+                              CircleAvatar( 
+                                radius: 30.0,
+                                backgroundColor: Colors.grey[200],
+                                child: CircleAvatar(
+                                  radius: 26.0,
+                                  backgroundImage: NetworkImage(cat.imageLink),
+                                  backgroundColor: Colors.white
+                                )
+                              ) :
+                              CircleAvatar( 
+                                radius: 30.0,
+                                backgroundColor: Colors.grey[200],
+                                child: const CircleAvatar(
+                                  radius: 26.0,
+                                  backgroundImage: AssetImage('images/default_cat.jpg'),
+                                  backgroundColor: Colors.white
+                                )
                               ),
-                              radius: 30.0
-                            ),
                             
                             //Amplitud interna de la caja
                             contentPadding: const EdgeInsets.all(15.0),
-
-                            //Color de la caja
+            
                             tileColor: Colors.grey[350],
-
+            
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0)
                             ),
-
+            
                             onTap: () => Get.toNamed(AppPages.PET, arguments: cat),
-
                           ),
                         )
                       );
                     })
-                  ))
+                  )
                 )
               ]
             );
           }else{  
-            return cupertinoDialog(context, 'No pets found', 'Error', () => Get.toNamed(AppPages.PET));
+            return const Center(
+              child: Text(
+                'Something went wrong',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontFamily: 'JosefinSans',
+                  color: Colors.black
+                )
+              ),
+            );
           }
-        })
+        }
       )
     );
   }

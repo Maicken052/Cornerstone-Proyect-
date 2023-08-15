@@ -1,16 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:developer';
 
 class RequestUtil{
-  final endpoint = 'https://petfeed-container.euqb4jc9s71os.us-east-1.cs.amazonlightsail.com/';  //URL del restAPI
+  final String endpoint = 'https://petfeed-container.euqb4jc9s71os.us-east-1.cs.amazonlightsail.com/';  //URL del restAPI
 
-  Future<http.Response> register(user, email, password) async {
+  Future<http.Response> register(String user, String email, String password) async{
     return http.post(Uri.parse('${endpoint}users/register/'),
     body: json.encode({
-      "password":password,
-      "email":email,
-      "user":user
+      "password": password,
+      "email": email,
+      "user": user
       }),
     headers: {
       'Content-Type': 'application/json'
@@ -18,19 +17,19 @@ class RequestUtil{
     );
   }
 
-  Future<http.Response> login(username, password) async {
+  Future<http.Response> login(String username, String password) async{
     return http.post(Uri.parse('${endpoint}token'),
     body: {
-      "username":username, 
-      "password":password
+      "username": username, 
+      "password": password
       }
     );
   }
 
-  Future<http.Response> getName(email) async {
+  Future<http.Response> getName(String email) async{
     return http.post(Uri.parse('${endpoint}users/me/'),
     body: json.encode({
-      "email":email
+      "email": email
       }),
     headers: {
       'Content-Type': 'application/json'
@@ -38,13 +37,13 @@ class RequestUtil{
     );
   }
 
-  Future<http.Response> addCat(name, birthdate, weight, userEmail) async {
+  Future<http.Response> addCat(String name, String birthdate, String weight, String email) async{
     return http.post(Uri.parse('${endpoint}pet/add/'),
     body: json.encode({
-      "name":name,
-      "birthdate":birthdate,
-      "weight":weight,
-      "user_email":userEmail
+      "name": name,
+      "birthdate": birthdate,
+      "weight": weight,
+      "user_email": email
       }),
     headers: {
       'Content-Type': 'application/json'
@@ -52,7 +51,7 @@ class RequestUtil{
     );
   }
 
-  Future<http.Response> getPets(userEmail) async {
-    return http.get(Uri.parse('${endpoint}pet/all-pets/$userEmail'));
+  Future<http.Response> getPets(String email) async {
+    return http.get(Uri.parse('${endpoint}pet/all-pets/$email'));
   }
 }

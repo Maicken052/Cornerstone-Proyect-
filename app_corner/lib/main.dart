@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:app_corner/routes/app_pages.dart';
-import 'package:app_corner/components/user_controller.dart';
+import '../routes/app_pages.dart';
+import 'controllers/user_controller.dart';
 
-//Función que ejecuta la aplicación
-void main(){
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); //Inicializa Firebase
   runApp(const App());
   Get.put(UserController());  //Inicializa el controlador de usuario
-} 
+}
 
-class App extends StatelessWidget { 
+class App extends StatelessWidget{ 
 const App({ Key? key }) : super(key: key);
 
   @override

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
-dynamic cupertinoDialog(BuildContext context, String msg, String title, Function()? function){
+dynamic cupertinoDialog(BuildContext context, String text, String title, Function()? function){
+  Navigator.pop(context);  //Cerrar el circular progress indicator
   return showCupertinoDialog(
     context: context,
     builder: (BuildContext context) => CupertinoAlertDialog(
-
       //Título del diálogo
       title: Text(
         title,
@@ -13,7 +13,7 @@ dynamic cupertinoDialog(BuildContext context, String msg, String title, Function
 
       //Contenido del diálogo
       content: Text(
-        msg,
+        text,
         style: const TextStyle(fontSize: 16)
       ),
 

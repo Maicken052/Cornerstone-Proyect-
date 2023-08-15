@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "33436402364",
+    "project_id": "petfeed-ee5df",
+    "storage_bucket": "petfeed-ee5df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33436402364:android:9e1b8464388bfaea8946b9",
+        "android_client_info": {
+          "package_name": "com.example.app_corner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33436402364-0f0chglomekrdd3gkqn31pin4j93mck0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6JlRCPWOhwMJl8_fBM0dHENZi5H-xSN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33436402364-0f0chglomekrdd3gkqn31pin4j93mck0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

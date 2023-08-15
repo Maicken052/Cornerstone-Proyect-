@@ -4,7 +4,6 @@ import '../pages/login.dart';
 import '../pages/sign_up.dart';
 import '../pages/home.dart';
 import '../pages/add_pet.dart';
-import '../pages/profile.dart';
 import '../pages/your_pets.dart';
 import '../pages/pet.dart';
 part 'app_routes.dart';
@@ -17,7 +16,6 @@ class AppPages {
   static const HOME = Routes.HOME;
   static const YOUR_PETS = Routes.YOUR_PETS;
   static const ADD_PET = Routes.ADD_PET;
-  static const PROFILE = Routes.PROFILE;
   static const PET = Routes.PET;
 
   static final routes = [
@@ -44,13 +42,8 @@ class AppPages {
 
     GetPage(
       name: _Paths.ADD_PET,
-      page: () => AddPet(),
+      page: () => const AddPet(),
       binding: PetsBinding()
-    ),
-
-    GetPage(
-      name: _Paths.PROFILE,
-      page: () => const Profile(),
     ),
 
     GetPage(

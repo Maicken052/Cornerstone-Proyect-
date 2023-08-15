@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../components/pets_controller.dart';
+import '../controllers/pets_controller.dart';
 
 class PetsBinding extends Bindings {
   @override

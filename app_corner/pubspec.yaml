@@ -33,7 +33,10 @@ dependencies:
   get:
   http:
   cupertino_icons: ^1.0.2
-  shared_preferences: ^2.1.1
+  image_picker: ^1.0.0
+  cloud_firestore: ^4.8.2
+  firebase_storage: ^11.2.4
+  firebase_core: ^2.14.0
 
 dev_dependencies:
   flutter_test:
@@ -49,9 +52,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "images/pet.png"
+  image_path: "images/logo.png"
   adaptative_icon_background: "#ffffff"
-  adaptative_icon_foreground: "images/pet_foreground.png"
+  adaptative_icon_foreground: "images/logo_foreground.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
